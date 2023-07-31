@@ -41,7 +41,7 @@ functions:
     handler: src/batch/saveNftCollectionBatch/index.handler
     events:
       - schedule:
-          rate: 'cron(0 */3 * * ? *)'
+          rate: 'cron(0 */1 * * ? *)'
           enabled: true
 
 resources:

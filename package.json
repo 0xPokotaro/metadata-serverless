@@ -8,7 +8,8 @@
     "format": "prettier . --write",
     "deploy:dev": "sls deploy --stage dev",
     "db-create:local": "dotenv -e .env.local npx prisma db push --force-reset && dotenv -e .env.local npx prisma db seed",
-    "db-create:dev": "dotenv -e .env.dev npx prisma db push --force-reset && dotenv -e .env.dev npx prisma db seed"
+    "db-create:dev": "dotenv -e .env.dev npx prisma db push --force-reset && dotenv -e .env.dev npx prisma db seed",
+    "prepare": "husky install"
   },
   "prisma": {
     "seed": "ts-node prisma/seeders/index.ts"
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@types/node": "^20.4.5",
     "dotenv-cli": "^7.2.1",
+    "husky": "^8.0.0",
     "prettier": "3.0.0",
     "prisma": "^5.0.0",
     "serverless": "^3.33.0",
