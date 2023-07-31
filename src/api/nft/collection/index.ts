@@ -16,8 +16,8 @@ const main = async (event: any) => {
             id: true,
             address: true,
           },
-        }
-      }
+        },
+      },
     })
 
     const outputData = []
