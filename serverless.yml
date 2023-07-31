@@ -20,6 +20,15 @@ provider:
   environment:
     STAGE: '${sls:stage}'
     MORALIS_API_KEY: '${env:MORALIS_API_KEY}'
+  # General api settings
+  httpApi:
+    cors:
+      allowedOrigins:
+        - '*'
+      allowedHeaders:
+        - '*'
+      allowedMethods:
+        - '*'
 
 package:
   individually: true
@@ -30,6 +39,7 @@ package:
     - '!node_modules/@prisma/engines/**'
 
 functions:
+  # BATCH
   saveNftTokenAddresses:
     handler: src/batch/saveNftTokenAddresses/index.handler
     events:
@@ -43,6 +53,14 @@ functions:
       - schedule:
           rate: 'cron(0 */1 * * ? *)'
           enabled: true
+
+  # API
+  getNftCollectionApi:
+    handler: src/api/nft/collection/index.handler
+    events:
+      - httpApi:
+          path: /api/nft/collection
+          method: get
 
 resources:
   Resources:
