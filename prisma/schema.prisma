@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model EvmChains {
+  id           Int      @id @db.UnsignedInt @default(autoincrement())
+  name         String   @db.VarChar(255) @unique
+  chainId      Int      @db.UnsignedInt @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  EvmChainLastProcessedBlocks EvmChainLastProcessedBlocks[]
+  EvmChainTokens             EvmChainTokens[]
+}
+
+model EvmChainLastProcessedBlocks {
+  id            Int      @id @db.UnsignedInt @default(autoincrement())
+  evmChainId    Int      @db.UnsignedInt
+  evmChains     EvmChains @relation(fields: [evmChainId], references: [id])
+  latestBlockNo Int      @db.UnsignedInt
+  lastCursor    String   @db.VarChar(296)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model EvmChainTokens {
+  id            Int      @id @db.UnsignedInt @default(autoincrement())
+  evmChainId    Int      @db.UnsignedInt
+  evmChains     EvmChains @relation(fields: [evmChainId], references: [id])
+  address       String   @db.VarChar(42) @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  EvmChainNftCollections EvmChainNftCollections[]
+}
+
+model EvmChainNftCollections {
+  id              Int      @id @db.UnsignedInt @default(autoincrement())
+  evmChainTokenId Int     @db.UnsignedInt
+  evmChainTokens  EvmChainTokens @relation(fields: [evmChainTokenId], references: [id])
+  name            String   @db.VarChar(255)
+  symbol          String   @db.VarChar(255)
+  contractType    String   @db.VarChar(255)
+  possibleSpam    Boolean
+  verifiedCollection Boolean
+  syncedAt        DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+

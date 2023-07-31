@@ -1,0 +1,58 @@
+service: metadata
+frameworkVersion: '3'
+
+useDotenv: true
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-typescript
+  - serverless-dotenv-plugin
+
+provider:
+  # General settings
+  name: aws
+  region: ap-northeast-1
+  profile: ruckplus
+  # General function settings
+  runtime: nodejs18.x
+  memorySize: 128
+  architecture: x86_64
+  environment:
+    STAGE: '${sls:stage}'
+    MORALIS_API_KEY: '${env:MORALIS_API_KEY}'
+
+package:
+  individually: true
+  patterns:
+    - '!node_modules/.prisma/client/libquery_engine-*'
+    - 'node_modules/.prisma/client/libquery_engine-rhel-*'
+    - '!node_modules/prisma/libquery_engine-*'
+    - '!node_modules/@prisma/engines/**'
+
+functions:
+  saveNftTokenAddresses:
+    handler: src/batch/saveNftTokenAddresses/index.handler
+    events:
+      - schedule:
+          rate: 'cron(0 */3 * * ? *)'
+          enabled: true
+
+  saveNftCollectionBatch:
+    handler: src/batch/saveNftCollectionBatch/index.handler
+    events:
+      - schedule:
+          rate: 'cron(0 */3 * * ? *)'
+          enabled: true
+
+resources:
+  Resources:
+    Metadata:
+      Type: 'AWS::RDS::DBInstance'
+      Properties:
+        AllocatedStorage: '5'
+        DBInstanceClass: 'db.t2.micro'
+        DBInstanceIdentifier: '${env:MYSQL_DATABASE}'
+        Engine: 'MySQL'
+        MasterUsername: '${env:MYSQL_ROOT_USER}'
+        MasterUserPassword: '${env:MYSQL_ROOT_PASSWORD}'
+        MultiAZ: false
