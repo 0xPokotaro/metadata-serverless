@@ -1,21 +1,12 @@
 import prisma from '../../../libs/prisma'
 
-const main = async (event: any) => {
+const main = async () => {
   try {
-    const { body } = event
-    const request = JSON.parse(body)
-
-    const inputData = {
-      name: request.name,
-    }
-
-    const response = await prisma.collections.create({
-      data: inputData,
-    })
+    const outputData = await prisma.collections.findMany()
 
     return {
       statusCode: 200,
-      body: JSON.stringify(response),
+      body: JSON.stringify(outputData),
     }
   } catch (error: any) {
     console.log(error)

@@ -59,11 +59,25 @@ functions:
           enabled: false
 
   # API
+  generateNonceApi:
+    handler: src/api/auth/nonce/generate/index.handler
+    events:
+      - httpApi:
+          path: /api/auth/nonce/generate
+          method: post
+
   getNftCollectionApi:
     handler: src/api/nft/collection/index.handler
     events:
       - httpApi:
           path: /api/nft/collection
+          method: get
+
+  listCollectionApi:
+    handler: src/api/collection/list/index.handler
+    events:
+      - httpApi:
+          path: /api/collection
           method: get
 
   createCollectionApi:
